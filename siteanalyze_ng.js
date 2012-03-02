@@ -158,7 +158,7 @@
 				if(!util.empty(params[param]))
 					out.push(param + "=" + util.esc(params[param]));
 
-			url = internal.target + "?" + out.join("&");
+			url = window.location.protocol + '//' + this.endpoint + "?" + out.join("&");
 
 			util.log("requesting -> %s", url);
 			img = new Image();
@@ -213,8 +213,8 @@
 			'load':    null,
 			'request': null
 		},
-		'target': "dump.php",
-		'cookie': 'nmstat'
+		'cookie': 'nmstat',
+		'endpoint': 'ssl.siteimprove.com/image.aspx' // image request target
 	};
 
 	// External API
@@ -242,8 +242,10 @@
 		'push': function(args) { 
 			if(typeof opts[args[0]] != "undefined") {
 				opts[args[0]] = args[1];
-			} else if(internal[args[0]]) {
+			} else if(internal[args[0]] && typeof internal[args[0]] == "function") {
 				internal[args[0]](args);
+			} else if(internal[args[0]]) {
+				internal[args[0]] = args[1];
 			} else {
 				internal.customfield(args);
 			}

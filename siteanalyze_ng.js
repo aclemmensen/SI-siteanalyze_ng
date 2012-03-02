@@ -1,64 +1,64 @@
 /**
  * SITEANALYZE_NG v0.2
- * Asbjørn Clemmensen <ac@siteimprove.com>
+ * AsbjÃ¸rn Clemmensen <ac@siteimprove.com>
  * 30. november 2011
  *
  * CHANGELOG
  * v0.2 Implementerer callbacks der kaldes ved load og ved hver request.
- * v0.1 Første iteration med alle de ting, der er beskrevet i oversigten nedenfor.
+ * v0.1 FÃ¸rste iteration med alle de ting, der er beskrevet i oversigten nedenfor.
  * 
  * Koden nedenfor er delt op i fem dele:
  *
- * 1: OPTS. Her defineres de værdier, som indgår i tracking-URL'en. Nogle af dem er
+ * 1: OPTS. Her defineres de vÃ¦rdier, som indgÃ¥r i tracking-URL'en. Nogle af dem er
  *    pre-filled, andre er sat til null. Et kald som _sz.push(['key', 'value']) kan
- *    sætte kun en værdi, hvis dens identifier allerede findes.
+ *    sÃ¦tte kun en vÃ¦rdi, hvis dens identifier allerede findes.
  *
  * 2: UTIL. Dette utility-API centraliserer ting som escaping, cookies, check for tomme
  *    strenge, at hente elementer via id eller tagname osv. Det fungerer som en meget
  *    let erstatning for det arbejde et framework normalt ville tage sig af.
  *
  * 3: INTERNAL. Disse metoder skal ikke kunne kaldes direkte af brugerne, da de
- *    udfører arbejde som skal laves *før* hoved-requesten sendes afsted. Men der er
+ *    udfÃ¸rer arbejde som skal laves *fÃ¸r* hoved-requesten sendes afsted. Men der er
  *    indirekte adgang til disse metoder igennem _sz.push(['metode', 'argument']).
- *    Derved kan man sætte kald til breadcrumbs, metagroup osv. i kø, og så bliver
- *    de eksekveret når brugerdata behandles.
+ *    Derved kan man sÃ¦tte kald til breadcrumbs, metagroup osv. i kÃ¸, og sÃ¥ bliver
+ *    de eksekveret nÃ¥r brugerdata behandles.
  *
- * 4: API. Her defineres det eksternt tilgængelige API, som gøres tilgængeligt for
+ * 4: API. Her defineres det eksternt tilgÃ¦ngelige API, som gÃ¸res tilgÃ¦ngeligt for
  *    brugerne via _sz. Her kan logclick og logfile findes, og jeg forestiller mig,
- *    at event tracking og andre features med tiden kan gøres tilgængelige her.
+ *    at event tracking og andre features med tiden kan gÃ¸res tilgÃ¦ngelige her.
  *
- * 5: MAIN. Her indlæses brugerdata (igennem api.push()), session-oplysninger hentes
+ * 5: MAIN. Her indlÃ¦ses brugerdata (igennem api.push()), session-oplysninger hentes
  *    fra vores cookie, clickhandlers installeres og hoved-requesten bliver fyret af.
  *
- * Det eneste vi smider i globalt namespace er objektet _sz, resten foregår i en
- * closure, hvis eksterne dele kan tilgås efterfølgende fra _sz.
+ * Det eneste vi smider i globalt namespace er objektet _sz, resten foregÃ¥r i en
+ * closure, hvis eksterne dele kan tilgÃ¥s efterfÃ¸lgende fra _sz.
  *
- * Jeg forestiller mig, at det script kunderne skal have et link til skal være en
- * wrapper omkring dette script. På den måde er det os, der står med alle de små
+ * Jeg forestiller mig, at det script kunderne skal have et link til skal vÃ¦re en
+ * wrapper omkring dette script. PÃ¥ den mÃ¥de er det os, der stÃ¥r med alle de smÃ¥
  * JavaScript-detaljer (i stedet for kunden, som ikke ved en pind om den slags). Men
  * det er samtidig vigtigt, at vi ikke laver adskillige kopier af den samme kode,
- * men med kundespecifikke modifikationer. Så mister vi nemlig muligheden for at
- * lave bugfixes, tilføje nye features osv. En alternativ model ville være at gøre
+ * men med kundespecifikke modifikationer. SÃ¥ mister vi nemlig muligheden for at
+ * lave bugfixes, tilfÃ¸je nye features osv. En alternativ model ville vÃ¦re at gÃ¸re
  * som Google Analytics (god offentlig dokumentation, ingen support).
  *
- * NOTE: Dette script bruger kun ét sæt identifiers for hver værdi vi sender igennem
+ * NOTE: Dette script bruger kun Ã©t sÃ¦t identifiers for hver vÃ¦rdi vi sender igennem
  * requesten. Det gamle kode havde mindst to. Bevirkningen er, at nogle af vores
- * identifiers ikke nødvendigvis er indlysende (eksempelvis sw og ft). Det er muligt
+ * identifiers ikke nÃ¸dvendigvis er indlysende (eksempelvis sw og ft). Det er muligt
  * at lave en mapping mellem "menneskevenlige termer" og URL params, men indtil
- * videre har jeg valgt at undlade dette pga. størrelse og effektivitet.
+ * videre har jeg valgt at undlade dette pga. stÃ¸rrelse og effektivitet.
  *
- * TODO: Pt. er onclick-handleren ikke præcis nok. Den virker næsten hele tiden i
+ * TODO: Pt. er onclick-handleren ikke prÃ¦cis nok. Den virker nÃ¦sten hele tiden i
  * IE (9 testet), men Chrome er ikke stabil. Det er uklart hvad problemet er --
- * i Chrome bliver requesten annulleret, når brugeren navigerer videre, og derfor
- * når scriptet ikke at fuldføre.
+ * i Chrome bliver requesten annulleret, nÃ¥r brugeren navigerer videre, og derfor
+ * nÃ¥r scriptet ikke at fuldfÃ¸re.
  *
- * TODO: Ikke al funktionalitet fra det eksisterende script er overført. Indtil
+ * TODO: Ikke al funktionalitet fra det eksisterende script er overfÃ¸rt. Indtil
  * videre mangler Sitecore's GUID og surveysessionid. Jeg forestiller mig dog, at
- * disse felter måske kan implementeres som mere fleksible "custom fields". Disse
- * manglende features er imidlertid trivielle at overføre.
+ * disse felter mÃ¥ske kan implementeres som mere fleksible "custom fields". Disse
+ * manglende features er imidlertid trivielle at overfÃ¸re.
  *
  * TODO: Scriptet er kun testet i Chrome (v16) og IE9. Derudover har jeg kun
- * testet "åbenlyse" scenarier -- altså ikke noget der kommer i nærheden af
+ * testet "Ã¥benlyse" scenarier -- altsÃ¥ ikke noget der kommer i nÃ¦rheden af
  * det custom kode, jeg kan forestille mig, at nogle af kunderne vil have.
  */
 

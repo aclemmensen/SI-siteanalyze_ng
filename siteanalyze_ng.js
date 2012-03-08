@@ -63,27 +63,6 @@
  */
 
 (function() {
-	// Base values for image request
-	var opts = {
-		'url': window.location.href,
-		'referer': document.referrer,
-		'title': document.title,
-		'res': window.screen.width + 'x' + window.screen.height,
-		'accountid': null,
-		'groups': null,   // siteanalyze content group(s)
-		'session': null,  // site session id
-		'path': null,     // breadcrumb path
-		'hits': null,     // number of hits
-		'sw': null,       // search word
-		'ft': null,       // file type
-		'guid': null,     // GUID
-		'uid': null,      // user id
-		'cid': null,      // site id
-		'cvid': null,     // virtual id
-		'rt': null,       // response time
-		'prev': null     // previous session
-	};
-
 	// Utility API
 	var util = {
 		'esc':   function(str) { return encodeURIComponent(new String(str).replace(/\n+|\r+|\s{2,}/g, null)); },
@@ -93,6 +72,12 @@
 		'clone': function(o)   { var n = {}; for(var i in o) { n[i] = o[i]; } return n; },
 		'rnd':   function()    { return Math.floor(Math.random() * 100000); },
 		'txt':   function(o)   { return (o.textContent) ? o.textContent : o.innerText; },
+		'uuid':  function()    {
+			var S4 = function() {
+				 return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+			};
+			return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+		},
 		'fmt':   function() {
 			var s = arguments[0];
 			for (var i = 0; i < arguments.length - 1; i++) {       
@@ -145,6 +130,29 @@
 			}
 		}
 	};
+
+	// Base values for image request
+	var opts = {
+		'url': window.location.href,
+		'referer': document.referrer,
+		'title': document.title,
+		'res': window.screen.width + 'x' + window.screen.height,
+		'accountid': null,
+		'groups': null,   // siteanalyze content group(s)
+		'session': null,  // site session id
+		'path': null,     // breadcrumb path
+		'hits': null,     // number of hits
+		'sw': null,       // search word
+		'ft': null,       // file type
+		'guid': null,     // GUID
+		'uid': null,      // user id
+		'cid': null,      // site id
+		'cvid': null,     // virtual id
+		'rt': null,       // response time
+		'prev': null,     // previous session
+		'szfbid': util.uuid()
+	};
+
 
 	// Internal API
 	var internal = {

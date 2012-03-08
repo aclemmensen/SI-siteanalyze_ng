@@ -106,7 +106,7 @@
 			if(e.addEventListener) { e.addEventListener('click', h, false); }
 			else if(e.attachEvent) { e.attachEvent('onclick', h); }
 		},
-		'log': function() { if(window['console']) console.log(arguments); },
+		'log': function(arg) { if(window['console']) console.log(arg); },
 		'cookie': function(n,v,o) {
 			if (typeof v != 'undefined') { // set cookie
 				o = o || {};
@@ -160,7 +160,7 @@
 
 			url = window.location.protocol + '//' + this.endpoint + "?" + out.join("&");
 
-			util.log("requesting -> %s", url);
+			util.log(util.fmt("requesting -> {0}", url));
 			img = new Image();
 			img.src = url;
 

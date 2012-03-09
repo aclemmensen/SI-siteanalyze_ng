@@ -138,19 +138,18 @@
 		'title': document.title,
 		'res': window.screen.width + 'x' + window.screen.height,
 		'accountid': null,
-		'groups': null,   // siteanalyze content group(s)
-		'session': null,  // site session id
-		'path': null,     // breadcrumb path
-		'hits': null,     // number of hits
-		'sw': null,       // search word
-		'ft': null,       // file type
-		'guid': null,     // GUID
-		'uid': null,      // user id
-		'cid': null,      // site id
-		'cvid': null,     // virtual id
-		'rt': null,       // response time
-		'prev': null,     // previous session
-		'szfbid': util.uuid()
+		'groups': null,       // siteanalyze content group(s)
+		'session': null,      // site session id
+		'path': null,         // breadcrumb path
+		'hits': null,         // number of hits
+		'sw': null,           // search word
+		'ft': null,           // file type
+		'guid': null,         // GUID
+		'uid': null,          // user id
+		'cid': null,          // site id
+		'cvid': null,         // virtual id
+		'prev': null,         // previous session
+		'szfbid': util.uuid() // uuid for feedback
 	};
 
 

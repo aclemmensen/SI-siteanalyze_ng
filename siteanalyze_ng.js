@@ -78,6 +78,13 @@
 			};
 			return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 		},
+		'navtime': function() {
+			if(window['performance']) {
+				return (new Date).getTime() - performance.timing.navigationStart;
+			} else {
+				return null;
+			}
+		},
 		'fmt':   function() {
 			var s = arguments[0];
 			for (var i = 0; i < arguments.length - 1; i++) {       
@@ -148,6 +155,7 @@
 		'uid': null,          // user id
 		'cid': null,          // site id
 		'cvid': null,         // virtual id
+		'rt': util.navtime(), // response time
 		'prev': null,         // previous session
 		'szfbid': util.uuid() // uuid for feedback
 	};

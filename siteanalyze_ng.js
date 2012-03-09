@@ -217,6 +217,13 @@
 			}
 		},
 
+		'feedback': function(args) {
+			console.log('loading feedback');
+			var szfb = document.createElement('script'); szfb.type = 'text/javascript'; szfb.async = true;
+			szfb.src = '//ac.givetwise.dk/siteanalyze_fb/feedback.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(szfb, s);
+		},
+
 		'callbacks': {
 			'load':    null,
 			'request': null

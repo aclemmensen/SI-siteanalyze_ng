@@ -71,6 +71,9 @@
 		_sz.push(['hits', '20']);
 		_sz.push(['callback', 'load', buildfields]);
 		_sz.push(['callback', 'request', debugreq]);
+		_sz.push(['callback', 'feedback', function() {
+			console.log('fb loaded');
+		});
 
 		// Load siteanalyze_ng, async style
 		(function() {

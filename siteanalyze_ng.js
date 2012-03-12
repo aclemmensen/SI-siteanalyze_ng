@@ -232,8 +232,9 @@
 		},
 
 		'callbacks': {
-			'load':    null,
-			'request': null
+			'load':     null,
+			'request':  null,
+			'feedback': null,
 		},
 		'cookie': 'nmstat',
 		'endpoint': 'ssl.siteimprove.com/image.aspx' // image request target
@@ -275,7 +276,8 @@
 		
 		'opts': opts,
 		'userdata': _sz,
-		'util': util
+		'util': util,
+		'internal': internal
 	};
 
 	// Handle user-defined variables

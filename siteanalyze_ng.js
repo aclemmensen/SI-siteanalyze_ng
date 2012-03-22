@@ -261,13 +261,13 @@
 			var _m = copts.mode;
 
 			var _w = document.createElement('div');
-			    _w.style.cssText = 'position:fixed; top:0; left:0; width:100%; background-color:white; border-bottom:2px black solid;';
+			    _w.style.cssText = 'position:fixed; z-index:1000; top:0; left:0; width:100%; background-color:white; border-bottom:2px black solid;';
 					_w.id = "szcookiewrp";
 			var _i = document.createElement('div');
 			    _i.style.cssText = 'font-size:12px; font-family:Arial; padding:4px 0; width:800px; margin:auto;';
 					_i.id = "szcookieinner";
 			var _t = document.createElement('p');
-					_t.style.cssText = 'width: 580px; margin:0; padding:5px 0; float:left;';
+					_t.style.cssText = 'width: 580px; margin:0; padding:5px 0; float:left; text-align:left;';
 			    _t.innerHTML = copts.text;
 			var _b = document.createElement('div');
 			    _b.id = "szcookiebtn";
@@ -302,6 +302,9 @@
 			_i.appendChild(_x);
 			_w.appendChild(_i);
 
+			// TODO: document.body er nogle gange ikke tilgængelig når dette kode kører.
+			// Måske bør det pakkes ind i en window.onload, alternativt skal det bare i
+			// en try/catch.
 			document.body.appendChild(_w);
 		},
 

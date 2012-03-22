@@ -231,6 +231,80 @@
 			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(szfb, s);
 		},
 
+		'cookieopt': function(args) {
+			var copts = args[1];
+
+			var _fs = function() {
+				// session cookie
+			};
+
+			var _fp = function() {
+				// permanent cookie
+			};
+
+			var _fa = function() {
+				console.log('%s: accepted...', _m);
+				_fc();
+			}
+
+			var _fr = function() {
+				console.log('%s: refused...', _m);
+				_fc();
+			}
+
+			var _fc = function() {
+				console.log('%s: closed...', _m);
+				_w.parentNode.removeChild(_w);
+			};
+
+			var _bs = 'display:inline-block; margin-left:5px; zoom:1;';
+			var _m = copts.mode;
+
+			var _w = document.createElement('div');
+			    _w.style.cssText = 'position:fixed; top:0; left:0; width:100%; background-color:white; border-bottom:2px black solid;';
+					_w.id = "szcookiewrp";
+			var _i = document.createElement('div');
+			    _i.style.cssText = 'font-size:12px; font-family:Arial; padding:4px 0; width:800px; margin:auto;';
+					_i.id = "szcookieinner";
+			var _t = document.createElement('p');
+					_t.style.cssText = 'width: 580px; margin:0; padding:5px 0; float:left;';
+			    _t.innerHTML = copts.text;
+			var _b = document.createElement('div');
+			    _b.id = "szcookiebtn";
+					_b.style.cssText = 'float:right; width:200px; text-align:right;';
+			var _a = document.createElement('a');
+			    _a.id = "szcookieacpt";
+					_a.style.cssText = _bs + 'border:2px black solid; padding:2px 5px;';
+					_a.onclick = _fa;
+					_a.setAttribute('href', '#');
+					_a.innerHTML = copts.accept;
+			var _r = document.createElement('a');
+			    _r.id = "szcookierefuse";
+					_r.style.cssText = _bs + 'border:2px black solid; padding:2px 5px;';
+					_r.onclick = _fr;
+					_r.setAttribute('href', '#');
+					_r.innerHTML = copts.refuse;
+			var _c = document.createElement('a');
+			    _c.id = "szcookieclose";
+					_c.style.cssText = _bs + 'outline:none; background:#ccc; padding:4px; text-indent:9999px; width:20px;';
+					_c.onclick = _fc;
+					_c.setAttribute('href', '#');
+					_c.innerHTML = copts.close;
+			var _x = document.createElement('div');
+			    _x.style.cssText = 'clear:both; font-size:0; line-height:0;';
+
+			if     (_m == 'optin')  _b.appendChild(_a);
+			else if(_m == 'optout') _b.appendChild(_r);
+
+			_b.appendChild(_c);
+			_i.appendChild(_t);
+			_i.appendChild(_b);
+			_i.appendChild(_x);
+			_w.appendChild(_i);
+
+			document.body.appendChild(_w);
+		},
+
 		'callbacks': {
 			'load':     null,
 			'request':  null,

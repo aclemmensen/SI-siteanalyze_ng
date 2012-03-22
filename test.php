@@ -75,6 +75,7 @@
 			console.log('fb loaded');
 		}]);
 		_sz.push(['feedback', null]);
+		_sz.push(['cookieopt', { 'mode': 'optin', 'text': 'dette er en test...', 'accept': 'Accept', 'refuse': 'Refuse', 'close': 'Close' }]);
 
 		// Load siteanalyze_ng, async style
 		(function() {

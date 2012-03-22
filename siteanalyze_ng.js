@@ -234,7 +234,7 @@
 		'callbacks': {
 			'load':     null,
 			'request':  null,
-			'feedback': null,
+			'feedback': null
 		},
 		'cookie': 'nmstat',
 		'endpoint': 'ssl.siteimprove.com/image.aspx' // image request target

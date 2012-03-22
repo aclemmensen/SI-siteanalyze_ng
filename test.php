@@ -73,7 +73,8 @@
 		_sz.push(['callback', 'request', debugreq]);
 		_sz.push(['callback', 'feedback', function() {
 			console.log('fb loaded');
-		});
+		}]);
+		_sz.push(['feedback', null]);
 
 		// Load siteanalyze_ng, async style
 		(function() {

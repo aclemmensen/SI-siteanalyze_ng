@@ -62,7 +62,7 @@
  * det custom kode, jeg kan forestille mig, at nogle af kunderne vil have.
  */
 
-(function() {
+(function(w) {
 	// Utility API
 	var util = {
 		'esc':   function(str) { return encodeURIComponent(new String(str).replace(/\n+|\r+|\s{2,}/g, null)); },
@@ -79,7 +79,7 @@
 			return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 		},
 		'navtime': function() {
-			if(window['performance']) {
+			if(w['performance']) {
 				return (new Date).getTime() - performance.timing.navigationStart;
 			} else {
 				return null;
@@ -98,7 +98,7 @@
 			if(e.addEventListener) { e.addEventListener('click', h, false); }
 			else if(e.attachEvent) { e.attachEvent('onclick', h); }
 		},
-		'log': function(arg) { if(window['console']) console.log(arg); },
+		'log': function(arg) { if(w['console']) console.log(arg); },
 		'cookie': function(n,v,o) {
 			if (typeof v != 'undefined') { // set cookie
 				o = o || {};
@@ -140,10 +140,10 @@
 
 	// Base values for image request
 	var opts = {
-		'url': window.location.href,
+		'url': w.location.href,
 		'referer': document.referrer,
 		'title': document.title,
-		'res': window.screen.width + 'x' + window.screen.height,
+		'res': w.screen.width + 'x' + w.screen.height,
 		'accountid': null,
 		'groups': null,       // siteanalyze content group(s)
 		'session': null,      // site session id
@@ -173,7 +173,7 @@
 				if(!util.empty(params[param]))
 					out.push(param + "=" + util.esc(params[param]));
 
-			url = window.location.protocol + '//' + this.endpoint + "?" + out.join("&");
+			url = w.location.protocol + '//' + this.endpoint + "?" + out.join("&");
 
 			util.log(util.fmt("requesting -> {0}", url));
 			img = new Image();
@@ -218,7 +218,7 @@
 				var name = args[1];
 				var func = (args[2] !== undefined) ? args[2] : null;
 				if(name && func && this.callbacks[name] !== undefined) {
-					if(typeof func == "string" && typeof window[func] == "function") { this.callbacks[name] = window[func]; }
+					if(typeof func == "string" && typeof w[func] == "function") { this.callbacks[name] = w[func]; }
 					else if(typeof func == "function") { this.callbacks[name] = func; }
 				}
 			}
@@ -256,7 +256,7 @@
 		'logclick': function(url) {
 			this.push(['request', {
 				'ourl': url,
-				'ref': window.location,
+				'ref': w.location,
 				'autoonclick': 1,
 				'accountid': opts.accountid
 			}]);
@@ -312,4 +312,4 @@
 	api.push(['request']);
 	internal.callback('load');
 
-})();
+})(window);

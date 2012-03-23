@@ -286,15 +286,14 @@
 					_r.innerHTML = copts.refuse;
 			var _c = document.createElement('a');
 			    _c.id = "szcookieclose";
-					_c.style.cssText = _bs + 'outline:none; background:#ccc; padding:4px; text-indent:9999px; width:20px;';
+					_c.style.cssText = _bs + 'outline:none; background:#ccc; padding:4px; text-indent:9999px; width:15px;';
 					_c.onclick = _fc;
 					_c.setAttribute('href', '#');
 					_c.innerHTML = copts.close;
 			var _x = document.createElement('div');
 			    _x.style.cssText = 'clear:both; font-size:0; line-height:0;';
 
-			if     (_m == 'optin')  _b.appendChild(_a);
-			else if(_m == 'optout') _b.appendChild(_r);
+			_b.appendChild((_m == 'optin') ? _a : _r);
 
 			_b.appendChild(_c);
 			_i.appendChild(_t);
@@ -302,10 +301,13 @@
 			_i.appendChild(_x);
 			_w.appendChild(_i);
 
-			// TODO: document.body er nogle gange ikke tilgængelig når dette kode kører.
-			// Måske bør det pakkes ind i en window.onload, alternativt skal det bare i
-			// en try/catch.
-			document.body.appendChild(_w);
+			_fl = function() {
+				document.body.appendChild(_w);
+			};
+
+			(w.addEventListener)
+				? w.addEventListener('load', _fl, false)
+				: w.attachEvent('onload', _fl);
 		},
 
 		'callbacks': {

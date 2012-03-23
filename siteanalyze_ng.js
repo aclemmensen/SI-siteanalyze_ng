@@ -257,43 +257,51 @@
 				_w.parentNode.removeChild(_w);
 			};
 
-			var _bs = 'display:inline-block; margin-left:5px; zoom:1;';
+			var _bs = 'line-height:15px; color:white; font-weight:bold; background:green; display:inline-block; margin-left:5px; zoom:1;';
 			var _m = copts.mode;
 
 			var _w = document.createElement('div');
 			    _w.style.cssText = 'position:fixed; z-index:1000; top:0; left:0; width:100%; background-color:white; border-bottom:2px black solid;';
 					_w.id = "szcookiewrp";
 			var _i = document.createElement('div');
-			    _i.style.cssText = 'font-size:12px; font-family:Arial; padding:4px 0; width:800px; margin:auto;';
+			    _i.style.cssText = 'font-size:12px; font-family:Arial; padding:10px 0; width:940px; margin:auto;';
 					_i.id = "szcookieinner";
 			var _t = document.createElement('p');
-					_t.style.cssText = 'width: 580px; margin:0; padding:5px 0; float:left; text-align:left;';
+					_t.style.cssText = 'width: 780px; margin:0; padding:0; float:left; text-align:left;';
 			    _t.innerHTML = copts.text;
 			var _b = document.createElement('div');
 			    _b.id = "szcookiebtn";
-					_b.style.cssText = 'float:right; width:200px; text-align:right;';
+					_b.style.cssText = 'float:right; width:150px; text-align:right;';
 			var _a = document.createElement('a');
 			    _a.id = "szcookieacpt";
-					_a.style.cssText = _bs + 'border:2px black solid; padding:2px 5px;';
+					_a.style.cssText = _bs + 'padding:5px 15px;';
 					_a.onclick = _fa;
 					_a.setAttribute('href', '#');
 					_a.innerHTML = copts.accept;
 			var _r = document.createElement('a');
 			    _r.id = "szcookierefuse";
-					_r.style.cssText = _bs + 'border:2px black solid; padding:2px 5px;';
+					_r.style.cssText = _bs + 'padding:5px 15px; background:white; text-decoration:underline; color:#444; font-weight:normal; ';
 					_r.onclick = _fr;
 					_r.setAttribute('href', '#');
 					_r.innerHTML = copts.refuse;
 			var _c = document.createElement('a');
 			    _c.id = "szcookieclose";
-					_c.style.cssText = _bs + 'outline:none; background:#ccc; padding:4px; text-indent:9999px; width:15px;';
+					_c.style.cssText = _bs + 'outline:none; background:#ccc; padding:5px; text-indent:9999px; width:15px; background:url(\'http://ac.givetwise.dk/siteanalyze_ng/close_sprite.png\') no-repeat 0 0;';
 					_c.onclick = _fc;
 					_c.setAttribute('href', '#');
 					_c.innerHTML = copts.close;
 			var _x = document.createElement('div');
-			    _x.style.cssText = 'clear:both; font-size:0; line-height:0;';
+			    _x.style.cssText = 'clear:both; font-size:0; line-height:0; height:0;';
 
-			_b.appendChild((_m == 'optin') ? _a : _r);
+			switch(_m) {
+				case 'optin':
+					_b.appendChild(_a);
+					break;
+				case 'optout':
+					_b.appendChild(_r);
+					_c.style.backgroundPosition = '0 -25px';
+					break;
+			}
 
 			_b.appendChild(_c);
 			_i.appendChild(_t);
@@ -305,9 +313,13 @@
 				document.body.appendChild(_w);
 			};
 
-			(w.addEventListener)
-				? w.addEventListener('load', _fl, false)
-				: w.attachEvent('onload', _fl);
+			if(document.body) {
+				_fl();
+			} else {
+				(w.addEventListener)
+					? w.addEventListener('load', _fl, false)
+					: w.attachEvent('onload', _fl);
+			}
 		},
 
 		'callbacks': {

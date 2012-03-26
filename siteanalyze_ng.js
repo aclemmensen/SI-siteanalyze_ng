@@ -98,7 +98,7 @@
 			if(e.addEventListener) { e.addEventListener('click', h, false); }
 			else if(e.attachEvent) { e.attachEvent('onclick', h); }
 		},
-		'log': function(arg) { if(w['console']) console.log(arg); },
+		'log': function() { if(w['console']) console.log(arguments); },
 		'cookie': function(n,v,o) {
 			if (typeof v != 'undefined') { // set cookie
 				o = o || {};
@@ -233,32 +233,50 @@
 
 		'cookieopt': function(args) {
 			var copts = args[1];
+			var _m = copts.mode;
 
-			var _fs = function() {
-				// session cookie
-			};
+			this.cookieuserchoice.active = true;
 
-			var _fp = function() {
-				// permanent cookie
-			};
+			if(util.cookie('szcookiechoice')) {
+				this.cookieuserchoice.active = false;
+				this.cookieuserchoice.choice = util.cookie('szcookiechoice');
+				util.log(util.fmt('cookie choice has already been made: {0}', this.cookieuserchoice.choice));
+				return false;
+			}
+
+			var setperm = function() { internal.cookieuserchoice.choice = 'permanent'; }
+			var settemp = function() { internal.cookieuserchoice.choice = 'session';   }
+			var isperm  = function() { return internal.cookieuserchoice.choice == 'permanent'; }
+			var istemp  = function() { return internal.cookieuserchoice.choice == 'session';   }
 
 			var _fa = function() {
-				console.log('%s: accepted...', _m);
+				setperm();
 				_fc();
 			}
 
 			var _fr = function() {
-				console.log('%s: refused...', _m);
+				settemp();
 				_fc();
 			}
 
 			var _fc = function() {
-				console.log('%s: closed...', _m);
+				var savecookiechoice = function(e) {
+					internal.setcookie('szcookiechoice', internal.cookieuserchoice.choice, e);
+				};
+
+				if(isperm()) {
+					savecookiechoice(1000);
+					internal.setcookie(internal.cookiename, util.cookie(internal.cookiename), 1000);
+				} else if(istemp()) {
+					internal.setcookie(internal.cookiename, util.cookie(internal.cookiename));
+					savecookiechoice(null);
+				}
+
+				util.log(util.fmt('mode: {0}', internal.cookieuserchoice.choice));
 				_w.parentNode.removeChild(_w);
 			};
 
-			var _bs = 'line-height:15px; color:white; font-weight:bold; background:green; display:inline-block; margin-left:5px; zoom:1;';
-			var _m = copts.mode;
+			var _bs = 'line-height:15px; color:white; font-weight:bold; background:green; display:inline-block; zoom:1;';
 
 			var _w = document.createElement('div');
 			    _w.style.cssText = 'position:fixed; z-index:1000; top:0; left:0; width:100%; background-color:white; border-bottom:2px black solid;';
@@ -280,7 +298,7 @@
 					_a.innerHTML = copts.accept;
 			var _r = document.createElement('a');
 			    _r.id = "szcookierefuse";
-					_r.style.cssText = _bs + 'padding:5px 15px; background:white; text-decoration:underline; color:#444; font-weight:normal; ';
+					_r.style.cssText = _bs + 'display:block; width:110px; float:left; padding:5px; background:white; text-decoration:underline; color:#444; font-weight:normal; ';
 					_r.onclick = _fr;
 					_r.setAttribute('href', '#');
 					_r.innerHTML = copts.refuse;
@@ -294,13 +312,8 @@
 			    _x.style.cssText = 'clear:both; font-size:0; line-height:0; height:0;';
 
 			switch(_m) {
-				case 'optin':
-					_b.appendChild(_a);
-					break;
-				case 'optout':
-					_b.appendChild(_r);
-					_c.style.backgroundPosition = '0 -25px';
-					break;
+				case 'optin':  _b.appendChild(_a); settemp(); break;
+				case 'optout': _b.appendChild(_r); setperm(); _c.style.backgroundPosition = '0 -25px'; break;
 			}
 
 			_b.appendChild(_c);
@@ -322,12 +335,43 @@
 			}
 		},
 
+		'cookieuserchoice': {
+			'active': false,
+			'choice': null
+		},
+
+		'setcookie': function(n, v, e) {
+			var o = { domain: document.domain, path: '/' };
+
+			if(e != undefined && e != null) {
+				o.expires = e;
+			}
+
+			//console.log('cookie: %s -> %s (exp: %s)', n, v, e);
+			util.cookie(n, v, o);
+		},
+
+		'getsessid': function() {
+			var c = util.cookie(this.cookiename);
+			if(!c) {
+				var id = opts.session + (new Date()).getTime() + util.rnd();
+
+				var cus = this.cookieuserchoice;
+				var exp = (cus.active && cus.choice == 'session') ? null : 1000;
+
+				internal.setcookie(internal.cookiename, id, exp);
+				c = util.cookie(internal.cookiename);
+			}
+
+			return c;
+		},
+
 		'callbacks': {
 			'load':     null,
 			'request':  null,
 			'feedback': null
 		},
-		'cookie': 'nmstat',
+		'cookiename': 'nmstat',
 		'endpoint': 'ssl.siteimprove.com/image.aspx' // image request target
 	};
 
@@ -379,16 +423,7 @@
 	}
 
 	// Read/set cookie to get session info
-	var c = util.cookie(internal.cookie);
-	if(!c) {
-		util.cookie(internal.cookie, opts.session + (new Date()).getTime() + util.rnd(), {
-			domain: document.domain,
-			path: '/',
-			expires: 1000
-		});
-		c = util.cookie(internal.cookie);
-	}
-	opts.prev = c;
+	opts.prev = internal.getsessid();
 
 	// Attach onclick handlers
 	var links = util.tag('a');

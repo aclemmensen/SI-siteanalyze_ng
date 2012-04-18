@@ -76,11 +76,10 @@
 		}]);
 		_sz.push(['feedback', null]);
 		_sz.push(['cookieopt', {
-			'mode': 'optin',
-			'text': 'Vi bruger cookies til at samle statistik, så vi kan forbedre hjemmesiden. Statistikken er helt anonym og en cookie kan ikke samle personlig information på din computer, sprede virus eller andre skadelige programmer. Ønsker du ikke cookies, kan du <a href="#" id="szcookierefuse">vælge cookies fra her</a>. Læs mere om vores <a href="test.php?cookieshit#szcookiedefer">brug af cookies</a>.',
+			'mode': 'optout',
+			'text':  'Vi sætter cookies på din computer, når du har klikket videre to gange. Du kan <a href="#" id="szcookierefuse">vælge cookies fra her</a>. <a href="test.php?something#cookiedefer">Læs mere om cookies til statistik</a>.',
 			'accept': 'OK',
-			'refuse': 'Refuse',
-			'close': 'Close',
+			'close': 'Luk og acceptér cookies',
 			'defer': 3
 		}]);
 

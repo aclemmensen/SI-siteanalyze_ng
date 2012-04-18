@@ -150,6 +150,7 @@
 		'path': null,         // breadcrumb path
 		'hits': null,         // number of hits
 		'sw': null,           // search word
+		'ct': null,           // cookie type
 		'ft': null,           // file type
 		'guid': null,         // GUID
 		'uid': null,          // user id
@@ -235,44 +236,33 @@
 			var copts = args[1];
 			var _m = copts.mode;
 
-			this.cookieuserchoice.active = true;
-
 			if(util.cookie('szcookiechoice')) {
 				this.cookieuserchoice.active = false;
-				this.cookieuserchoice.choice = util.cookie('szcookiechoice');
-				util.log(util.fmt('cookie choice has already been made: {0}', this.cookieuserchoice.choice));
+				opts.ct = util.cookie('szcookiechoice');
 				return false;
+			} else {
+				this.cookieuserchoice.active = true;
 			}
 
-			var setperm = function() { internal.cookieuserchoice.choice = 'permanent'; }
-			var settemp = function() { internal.cookieuserchoice.choice = 'session';   }
-			var isperm  = function() { return internal.cookieuserchoice.choice == 'permanent'; }
-			var istemp  = function() { return internal.cookieuserchoice.choice == 'session';   }
+			var setperm = function() { internal.cookieuserchoice.choice = 'p'; }
+			var settemp = function() { internal.cookieuserchoice.choice = 's';   }
+			var isperm  = function() { return internal.cookieuserchoice.choice == 'p'; }
+			var istemp  = function() { return internal.cookieuserchoice.choice == 's';   }
 
-			var _fa = function() {
-				setperm();
-				_fc();
-			}
+			var _fa = function() { setperm(); _fc(); } // accept
+			var _fr = function() { settemp(); _fc(); } // refuse
+			var _sc = function(e) { internal.setcookie('szcookiechoice', internal.cookieuserchoice.choice, e); }; // store choice
 
-			var _fr = function() {
-				settemp();
-				_fc();
-			}
-
+			// set tracking cookie
 			var _fc = function() {
-				var savecookiechoice = function(e) {
-					internal.setcookie('szcookiechoice', internal.cookieuserchoice.choice, e);
-				};
-
+				internal.setcookie('szcookiepv', null);
 				if(isperm()) {
-					savecookiechoice(1000);
+					_sc(1000);
 					internal.setcookie(internal.cookiename, util.cookie(internal.cookiename), 1000);
 				} else if(istemp()) {
 					internal.setcookie(internal.cookiename, util.cookie(internal.cookiename));
-					savecookiechoice(null);
+					_sc(null);
 				}
-
-				util.log(util.fmt('mode: {0}', internal.cookieuserchoice.choice));
 				_w.parentNode.removeChild(_w);
 			};
 
@@ -313,7 +303,7 @@
 
 			switch(_m) {
 				case 'optin':  _b.appendChild(_a); settemp(); break;
-				case 'optout': _b.appendChild(_r); setperm(); _c.style.backgroundPosition = '0 -25px'; break;
+				case 'optout': /*_b.appendChild(_r); */setperm(); _c.style.backgroundPosition = '0 -25px'; break;
 			}
 
 			_b.appendChild(_c);
@@ -324,14 +314,28 @@
 
 			_fl = function() {
 				document.body.appendChild(_w);
-			};
+				var szcr = document.getElementById('szcookierefuse');
+				if(szcr != null) szcr.onclick = _fr;
+			}; // onload handler
 
-			if(document.body) {
-				_fl();
-			} else {
-				(w.addEventListener)
+			(document.body)
+				? _fl()
+				: ((w.addEventListener)
 					? w.addEventListener('load', _fl, false)
-					: w.attachEvent('onload', _fl);
+					: w.attachEvent('onload', _fl));
+
+			var pv = util.cookie('szcookiepv');
+			if(pv == null) {
+				pv = 1;
+				internal.setcookie('szcookiepv', pv);
+			} else if(window.location.hash.indexOf('szcookiedefer') == -1) {
+				internal.setcookie('szcookiepv', parseInt(pv) + 1);
+			} else {
+				pv = parseInt(pv);
+			}
+
+			if(pv >= ((copts['defer'] !== undefined) ? copts.defer : 3)) {
+				_fa();
 			}
 		},
 
@@ -357,7 +361,7 @@
 				var id = opts.session + (new Date()).getTime() + util.rnd();
 
 				var cus = this.cookieuserchoice;
-				var exp = (cus.active && cus.choice == 'session') ? null : 1000;
+				var exp = (cus.active && cus.choice == 's') ? null : 1000;
 
 				internal.setcookie(internal.cookiename, id, exp);
 				c = util.cookie(internal.cookiename);
@@ -397,7 +401,7 @@
 			}]);
 		},
 		
-		'push': function(args) { 
+		'push': function(args) {
 			if(typeof opts[args[0]] != "undefined") {
 				opts[args[0]] = args[1];
 			} else if(internal[args[0]] && typeof internal[args[0]] == "function") {

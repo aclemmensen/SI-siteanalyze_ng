@@ -75,7 +75,14 @@
 			console.log('fb loaded');
 		}]);
 		_sz.push(['feedback', null]);
-		_sz.push(['cookieopt', { 'mode': 'optin', 'text': 'dette er en test...', 'accept': 'Accept', 'refuse': 'Refuse', 'close': 'Close' }]);
+		_sz.push(['cookieopt', {
+			'mode': 'optin',
+			'text': 'Vi bruger cookies til at samle statistik, så vi kan forbedre hjemmesiden. Statistikken er helt anonym og en cookie kan ikke samle personlig information på din computer, sprede virus eller andre skadelige programmer. Ønsker du ikke cookies, kan du <a href="#" id="szcookierefuse">vælge cookies fra her</a>. Læs mere om vores <a href="test.php?cookieshit#szcookiedefer">brug af cookies</a>.',
+			'accept': 'OK',
+			'refuse': 'Refuse',
+			'close': 'Close',
+			'defer': 3
+		}]);
 
 		// Load siteanalyze_ng, async style
 		(function() {

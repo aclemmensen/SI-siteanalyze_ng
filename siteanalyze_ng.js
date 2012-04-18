@@ -157,7 +157,7 @@
 		'cvid': null,         // virtual id
 		'rt': util.navtime(), // response time
 		'prev': null,         // previous session
-		'szfbid': null        // uuid for feedback
+		'szfbid': util.uuid() // uuid for feedback
 	};
 
 
@@ -225,7 +225,7 @@
 		},
 
 		'feedback': function(args) {
-			opts.szfbid = util.uuid();
+			util.log('loading feedback');
 			var szfb = document.createElement('script'); szfb.type = 'text/javascript'; szfb.async = true;
 			szfb.src = '//ac.givetwise.dk/siteanalyze_fb/feedback.js';
 			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(szfb, s);

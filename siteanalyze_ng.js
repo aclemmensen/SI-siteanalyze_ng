@@ -235,23 +235,29 @@
 		'cookieopt': function(args) {
 			var copts = args[1];
 			var _m = copts.mode;
+			this.cookieuserchoice.active = true;
 
 			if(util.cookie('szcookiechoice')) {
-				this.cookieuserchoice.active = false;
 				opts.ct = util.cookie('szcookiechoice');
+				this.cookieuserchoice.choice = opts.ct;
 				return false;
-			} else {
-				this.cookieuserchoice.active = true;
 			}
 
 			var setperm = function() { internal.cookieuserchoice.choice = 'p'; }
-			var settemp = function() { internal.cookieuserchoice.choice = 's';   }
+			var settemp = function() { internal.cookieuserchoice.choice = 's'; }
+			var setnone = function() { internal.cookieuserchoice.choice = 'n'; }
 			var isperm  = function() { return internal.cookieuserchoice.choice == 'p'; }
-			var istemp  = function() { return internal.cookieuserchoice.choice == 's';   }
+			var istemp  = function() { return internal.cookieuserchoice.choice == 's'; }
+			var isnone  = function() { return internal.cookieuserchoice.choice == 'n'; }
 
 			var _fa = function() { setperm(); _fc(); } // accept
-			var _fr = function() { settemp(); _fc(); } // refuse
+			var _fr = function() { (copts.notrack) ? setnone() : settemp(); _fc(); } // refuse
+			var _fn = function() { setnone(); _fc(); } // no cookie
 			var _sc = function(e) { internal.setcookie('szcookiechoice', internal.cookieuserchoice.choice, e); }; // store choice
+
+			if(copts.notrack) {
+				setnone();
+			}
 
 			// set tracking cookie
 			var _fc = function() {
@@ -262,6 +268,14 @@
 				} else if(istemp()) {
 					internal.setcookie(internal.cookiename, util.cookie(internal.cookiename));
 					_sc(null);
+				} else if(isnone()) {
+					internal.setcookie(internal.cookiename, null);
+					_sc(null);
+					api.push(['request', {
+						'url': opts.url,
+						'accountid': opts.accountid,
+						'notrack': true
+					}]);
 				}
 				_w.parentNode.removeChild(_w);
 			};
@@ -282,7 +296,7 @@
 					_b.style.cssText = 'float:right; width:200px; text-align:right;';
 			var _a = document.createElement('a');
 			    _a.id = "szcookieacpt";
-					_a.style.cssText = _bs + 'padding:5px 15px;';
+					_a.style.cssText = _bs + 'padding:5px 15px; margin-right:10px;';
 					_a.onclick = _fa;
 					_a.setAttribute('href', '#');
 					_a.innerHTML = copts.accept;
@@ -296,11 +310,10 @@
 			    _x.style.cssText = 'clear:both; font-size:0; line-height:0; height:0;';
 
 			switch(_m) {
-				case 'optin':  _b.appendChild(_a); settemp(); break;
-				case 'optout': setperm(); _c.style.backgroundPosition = '100% -25px'; break;
+				case 'optin':  _b.appendChild(_a); (copts.notrack) ? setnone() : settemp(); break;
+				case 'optout': _b.appendChild(_c); setperm(); _c.style.backgroundPosition = '100% -25px'; break;
 			}
 
-			_b.appendChild(_c);
 			_i.appendChild(_t);
 			_i.appendChild(_b);
 			_i.appendChild(_x);
@@ -318,24 +331,29 @@
 					? w.addEventListener('load', _fl, false)
 					: w.attachEvent('onload', _fl));
 
-			var pv = util.cookie('szcookiepv');
-			if(pv == null) {
-				pv = 1;
-				internal.setcookie('szcookiepv', pv);
-			} else if(window.location.hash.indexOf('szcookiedefer') == -1) {
-				internal.setcookie('szcookiepv', parseInt(pv) + 1);
-			} else {
-				pv = parseInt(pv);
-			}
+			if(_m == 'optout') {
+				var pv = util.cookie('szcookiepv');
+				if(pv == null) {
+					internal.setcookie('szcookiepv', pv = 1);
+				} else if(window.location.hash.indexOf('szcookiedefer') == -1) {
+					internal.setcookie('szcookiepv', parseInt(pv) + 1);
+				} else {
+					pv = parseInt(pv);
+				}
 
-			if(pv >= ((copts['defer'] !== undefined) ? copts.defer : 3)) {
-				_fa();
+				if(pv >= ((copts['defer'] !== undefined) ? copts.defer : 3)) {
+					_fa();
+				}
 			}
 		},
 
 		'cookieuserchoice': {
 			'active': false,
 			'choice': null
+		},
+
+		'cantrack': function() {
+			return !(this.cookieuserchoice.active && this.cookieuserchoice.choice == 'n');
 		},
 
 		'setcookie': function(n, v, e) {
@@ -351,6 +369,10 @@
 
 		'getsessid': function() {
 			var c = util.cookie(this.cookiename);
+			if(!this.cantrack()) {
+				return null;
+			}
+
 			if(!c) {
 				var id = opts.session + (new Date()).getTime() + util.rnd();
 
@@ -419,21 +441,23 @@
 			api.push(_sz[i]);
 		}
 	}
+	_sz = api;
 
 	// Read/set cookie to get session info
 	opts.prev = internal.getsessid();
 
 	// Attach onclick handlers
-	var links = util.tag('a');
-	for(var i=0; i<links.length; i++) {
-		var l = links[i];
-		if(l.href.charAt(l.href.length-1) == "#") continue;
-		util.listen(l, function() { api.logclick(this.href); });
+	if(internal.cantrack()) {
+		var links = util.tag('a');
+		for(var i=0; i<links.length; i++) {
+			var l = links[i];
+			if(l.href.charAt(l.href.length-1) == "#") continue;
+			util.listen(l, function() { api.logclick(this.href); });
+		}
+
+		api.push(['request']);
 	}
 
-	_sz = api;
-
-	api.push(['request']);
 	internal.callback('load');
 
 })(window);

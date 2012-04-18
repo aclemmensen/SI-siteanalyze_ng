@@ -157,7 +157,8 @@
 		'cvid': null,         // virtual id
 		'rt': util.navtime(), // response time
 		'prev': null,         // previous session
-		'szfbid': null        // uuid for feedback
+		'szfbid': null,       // uuid for feedback
+		'feedbackid': null    // id of feedback config
 	};
 
 
@@ -225,7 +226,12 @@
 		},
 
 		'feedback': function(args) {
+			//util.log('loading feedback');
 			opts.szfbid = util.uuid();
+			if(window['_szfb_config'] !== undefined && _szfb_config.length > 0 && _szfb_config[0]['feedbackid'] !== undefined) {
+				opts.feedbackid = _szfb_config[0].feedbackid;
+			}
+
 			var szfb = document.createElement('script'); szfb.type = 'text/javascript'; szfb.async = true;
 			szfb.src = '//ssl.siteimprove.com/js/feedback/feedback.js';
 			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(szfb, s);

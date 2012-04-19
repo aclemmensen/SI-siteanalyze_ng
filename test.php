@@ -76,8 +76,8 @@
 		}]);
 		_sz.push(['feedback', null]);
 		_sz.push(['cookieopt', {
-			'mode': 'optin',
-			'text':  'Vi sætter cookies på din computer, når du har klikket videre to gange. Du kan <a href="#" id="szcookierefuse">vælge cookies fra her</a>. <a href="test.php?something#cookiedefer">Læs mere om cookies til statistik</a>.',
+			'mode': 'optout',
+			'text':  '<strong>Vi bruger cookies til statistik</strong><br />Vi sætter cookies på din computer, når du har klikket videre to gange. Du kan <a href="#" id="szcookierefuse">vælge cookies fra her</a>.<br /><a href="test.php?something#cookiedefer">Læs mere om cookies til statistik</a>.',
 			'accept': 'OK',
 			'close': 'Luk og acceptér cookies',
 			'notrack': true,

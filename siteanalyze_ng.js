@@ -141,7 +141,7 @@
 	// Base values for image request
 	var opts = {
 		'url': w.location.href,
-		'referer': document.referrer,
+		'ref': document.referrer,
 		'title': document.title,
 		'res': w.screen.width + 'x' + w.screen.height,
 		'accountid': null,

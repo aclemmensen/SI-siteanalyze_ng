@@ -234,13 +234,17 @@
 
 		'cookieopt': function(args) {
 			var copts = args[1];
-			var _m = copts.mode;
+			copts.cover = (copts.cover !== undefined) ? copts.cover : true;
+			var cc = copts.config || { 'mode': 'optin', 'notrack': true, 'defer': 3, 'force': false };
+			var _m = cc.mode;
 			this.cookieuserchoice.active = true;
 
-			if(util.cookie('szcookiechoice') && !copts.force) {
+			if(util.cookie('szcookiechoice')) {
 				opts.ct = util.cookie('szcookiechoice');
 				this.cookieuserchoice.choice = opts.ct;
-				return false;
+				if(!cc.force) {
+					return false;
+				}
 			}
 
 			var setperm = function() { internal.cookieuserchoice.choice = 'p'; }
@@ -251,11 +255,11 @@
 			var isnone  = function() { return internal.cookieuserchoice.choice == 'n'; }
 
 			var _fa = function() { setperm(); _fc(); } // accept
-			var _fr = function() { (copts.notrack) ? setnone() : settemp(); _fc(); } // refuse
+			var _fr = function() { (cc.notrack) ? setnone() : settemp(); _fc(); } // refuse
 			var _fn = function() { setnone(); _fc(); } // no cookie
 			var _sc = function(e) { internal.setcookie('szcookiechoice', internal.cookieuserchoice.choice, e); }; // store choice
 
-			if(copts.notrack) {
+			if(cc.notrack) {
 				setnone();
 			}
 
@@ -277,13 +281,18 @@
 						'notrack': true
 					}]);
 				}
-				_w.parentNode.removeChild(_w);
+				if(_w && _w.parentNode) {
+					_w.parentNode.removeChild(_w);
+				}
 			};
 
 			var _bs = 'line-height:15px; color:white; font-weight:bold; background:green; display:inline-block; zoom:1; text-decoration:none;';
 
 			var _w = document.createElement('div');
-			    _w.style.cssText = 'position:fixed; z-index:1000; top:0; left:0; width:100%; background-color:white; border-bottom:2px black solid;';
+			    _w.style.cssText = ((copts.cover)
+						? 'position:fixed; z-index:1000; top:0; left:0;'
+						: 'margin-bottom:15px;')
+						+ 'width:100%; background-color:white; border-bottom:2px black solid;';
 					_w.id = "szcookiewrp";
 			var _i = document.createElement('div');
 			    _i.style.cssText = 'font-size:14px; font-family:Arial; padding:15px 0; width:940px; margin:auto;';
@@ -310,7 +319,7 @@
 			    _x.style.cssText = 'clear:both; font-size:0; line-height:0; height:0;';
 
 			switch(_m) {
-				case 'optin':  _b.appendChild(_a); (copts.notrack) ? setnone() : settemp(); break;
+				case 'optin':  _b.appendChild(_a); (cc.notrack) ? setnone() : settemp(); break;
 				case 'optout': _b.appendChild(_c); setperm(); _c.style.backgroundPosition = '100% -25px'; break;
 			}
 
@@ -320,7 +329,7 @@
 			_w.appendChild(_i);
 
 			_fl = function() {
-				document.body.appendChild(_w);
+				(copts.cover) ? document.body.appendChild(_w) : document.body.insertBefore(_w, document.body.children[0]);
 				var szcr = document.getElementById('szcookierefuse');
 				if(szcr != null) szcr.onclick = _fr;
 			}; // onload handler
@@ -331,7 +340,7 @@
 					? w.addEventListener('load', _fl, false)
 					: w.attachEvent('onload', _fl));
 
-			if(_m == 'optout') {
+			if(cc.defer && cc.defer > 0 && !cc.force) {
 				var pv = util.cookie('szcookiepv');
 				if(pv == null) {
 					internal.setcookie('szcookiepv', pv = 1);
@@ -341,7 +350,7 @@
 					pv = parseInt(pv);
 				}
 
-				if(pv >= ((copts['defer'] !== undefined) ? copts.defer : 3)) {
+				if(pv >= ((cc.defer !== undefined) ? cc.defer : 3)) {
 					_fa();
 				}
 			}

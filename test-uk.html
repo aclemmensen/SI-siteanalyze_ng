@@ -7,19 +7,29 @@
 			var _sz = _sz || [];
 			_sz.push(['accountid', '1234']);
 			_sz.push(['cookieopt', {
-				'mode': 'optin',
 				'text':  '<strong>We use nasty, nasty cookies</strong><br />Cookies are mean-spirited creatures that make fun of your kids and steal from the elderly. They are also really ugly and smell bad. If you wish you can <a href="#" id="szcookierefuse">click here to refuse cookies</a>.<br /><a href="test.php?something#cookiedefer">Read more about these terrible creatures here</a>.',
 				'accept': 'Accept',
 				'close': 'Close and accept',
-				'notrack': true,
-				'defer': 3,
-				'force': true
+				'cover': false,
+				'config': {
+					'mode': 'optout',
+					'notrack': true,
+					'defer': 3,
+					'force': false
+				}
 			}]);
 		</script>
 		<script src="siteanalyze_ng.js"></script>
+		<style>
+			body { background:#e7e7e7; }
+			#main { background:white; padding:20px; width:600px; margin:auto; }
+		</style>
 	</head>
 	<body>
 
+		<div id="main">
+			<p>her er noget dumt indhold</p>
+		</div>
 
 
 	</body>

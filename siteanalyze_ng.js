@@ -98,7 +98,7 @@
 			if(e.addEventListener) { e.addEventListener('click', h, false); }
 			else if(e.attachEvent) { e.attachEvent('onclick', h); }
 		},
-		'log': function() { if(w['console']) console.log(arguments); },
+		'log': function(arg) { if(w['console']) console.log(arg); },
 		'cookie': function(n,v,o) {
 			if (typeof v != 'undefined') { // set cookie
 				o = o || {};
@@ -141,7 +141,7 @@
 	// Base values for image request
 	var opts = {
 		'url': w.location.href,
-		'referer': document.referrer,
+		'ref': document.referrer,
 		'title': document.title,
 		'res': w.screen.width + 'x' + w.screen.height,
 		'accountid': null,
@@ -158,7 +158,8 @@
 		'cvid': null,         // virtual id
 		'rt': util.navtime(), // response time
 		'prev': null,         // previous session
-		'szfbid': util.uuid() // uuid for feedback
+		'szfbid': null,       // uuid for feedback
+		'feedbackid': null    // id of feedback config
 	};
 
 
@@ -226,9 +227,14 @@
 		},
 
 		'feedback': function(args) {
-			util.log('loading feedback');
+			//util.log('loading feedback');
+			opts.szfbid = util.uuid();
+			if(window['_szfb_config'] !== undefined && _szfb_config.length > 0 && _szfb_config[0]['feedbackid'] !== undefined) {
+				opts.feedbackid = _szfb_config[0].feedbackid;
+			}
+
 			var szfb = document.createElement('script'); szfb.type = 'text/javascript'; szfb.async = true;
-			szfb.src = '//ac.givetwise.dk/siteanalyze_fb/feedback.js';
+			szfb.src = '//ssl.siteimprove.com/js/feedback/feedback.js';
 			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(szfb, s);
 		},
 

@@ -62,6 +62,8 @@
 
 		// Initialize array containing user-supplied variables, function calls etc.
 		var _sz = _sz || [];
+		var _szfb_config = _szfb_config || [];
+		_szfb_config.push({"feedbackid": 10, "layout": {"anim": true, "anim_duration": 300, "colors": {"background": "#9e9eff", "text": "black" }, "comment": false, "corners": 5, "font": {"name": "Verdana", "size": 11 }, "position": "E", "preset": {"count": 2, "highlightRange": false, "reversed": false, "type": "janej" }, "width": 250 }, "matches": {"include": [ {"m": 1, "s": "test" } ], "exclude": [] }, "texts": {"button": "BUTTON_VALUE", "close": "Close", "comment": "DEFAULT_COMMENT_BOX_VALUE", "confirmation": "CONFIRMATION_VALUE", "errors": {"commit": "Der opstod en fejl...", "grade": "ERROR_IF_NO_SCALE_VALUE" }, "hide": "Hide", "question": "Mortens", "title": "Udfyld tekstfelt" } });
 
 		_sz.push(['accountid', '1239539']);
 		_sz.push(['groups', 'Tester']);

@@ -237,7 +237,7 @@
 			var _m = copts.mode;
 			this.cookieuserchoice.active = true;
 
-			if(util.cookie('szcookiechoice')) {
+			if(util.cookie('szcookiechoice') && !copts.force) {
 				opts.ct = util.cookie('szcookiechoice');
 				this.cookieuserchoice.choice = opts.ct;
 				return false;

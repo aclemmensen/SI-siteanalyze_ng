@@ -245,6 +245,11 @@
 			var _m = cc.mode;
 			this.cookieuserchoice.active = true;
 
+			if(~w.location.href.indexOf('szcookietest')) {
+				util.log('cookieopt: in usertest mode');
+				cc.force = true;
+			}
+
 			if(util.cookie('szcookiechoice')) {
 				opts.ct = util.cookie('szcookiechoice');
 				this.cookieuserchoice.choice = opts.ct;

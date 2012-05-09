@@ -241,6 +241,7 @@
 		'cookieopt': function(args) {
 			var copts = args[1];
 			copts.cover = (copts.cover !== undefined) ? copts.cover : true;
+			var ctest = (copts.test !== undefined) ? copts.test : false;
 			var cc = copts.config || { 'mode': 'optin', 'notrack': true, 'defer': 3, 'force': false };
 			var _m = cc.mode;
 			this.cookieuserchoice.active = true;
@@ -248,6 +249,10 @@
 			if(~w.location.href.indexOf('szcookietest')) {
 				util.log('cookieopt: in usertest mode');
 				cc.force = true;
+			}
+
+			if(ctest) {
+				this.cookieuserchoice.active = false;
 			}
 
 			if(util.cookie('szcookiechoice')) {
@@ -270,31 +275,31 @@
 			var _fn = function() { setnone(); _fc(); } // no cookie
 			var _sc = function(e) { internal.setcookie('szcookiechoice', internal.cookieuserchoice.choice, e); }; // store choice
 
-			if(cc.notrack) {
+			if(cc.notrack && !ctest) {
 				setnone();
 			}
 
 			// set tracking cookie
 			var _fc = function() {
 				internal.setcookie('szcookiepv', null);
-				if(isperm()) {
-					_sc(1000);
-					internal.setcookie(internal.cookiename, util.cookie(internal.cookiename), 1000);
-				} else if(istemp()) {
-					internal.setcookie(internal.cookiename, util.cookie(internal.cookiename));
-					_sc(null);
-				} else if(isnone()) {
-					internal.setcookie(internal.cookiename, null);
-					_sc(null);
-					api.push(['request', {
-						'url': opts.url,
-						'accountid': opts.accountid,
-						'notrack': true
-					}]);
+				if(!cc.force) {
+					if(isperm()) {
+						_sc(1000); internal.setcookie(internal.cookiename, util.cookie(internal.cookiename), 1000);
+					} else if(istemp()) {
+						_sc(null); internal.setcookie(internal.cookiename, util.cookie(internal.cookiename));
+					} else if(isnone()) {
+						_sc(null); internal.setcookie(internal.cookiename, null);
+						api.push(['request', {
+							'url': opts.url,
+							'accountid': opts.accountid,
+							'notrack': true
+						}]);
+					}
 				}
 				if(_w && _w.parentNode) {
 					_w.parentNode.removeChild(_w);
 				}
+				return false;
 			};
 
 			var _bs = 'line-height:15px; color:white; font-weight:bold; background:green; display:inline-block; zoom:1; text-decoration:none;';
@@ -345,24 +350,26 @@
 				if(szcr != null) szcr.onclick = _fr;
 			}; // onload handler
 
-			(document.body)
-				? _fl()
-				: ((w.addEventListener)
-					? w.addEventListener('load', _fl, false)
-					: w.attachEvent('onload', _fl));
+			if(!ctest || (ctest && cc.force)) {
+				(document.body)
+					? _fl()
+					: ((w.addEventListener)
+						? w.addEventListener('load', _fl, false)
+						: w.attachEvent('onload', _fl));
 
-			if(cc.defer && cc.defer > 0 && !cc.force) {
-				var pv = util.cookie('szcookiepv');
-				if(pv == null) {
-					internal.setcookie('szcookiepv', pv = 1);
-				} else if(window.location.hash.indexOf('szcookiedefer') == -1) {
-					internal.setcookie('szcookiepv', parseInt(pv) + 1);
-				} else {
-					pv = parseInt(pv);
-				}
+				if(cc.defer && cc.defer > 0 && !cc.force) {
+					var pv = util.cookie('szcookiepv');
+					if(pv == null) {
+						internal.setcookie('szcookiepv', pv = 1);
+					} else if(window.location.hash.indexOf('szcookiedefer') == -1) {
+						internal.setcookie('szcookiepv', parseInt(pv) + 1);
+					} else {
+						pv = parseInt(pv);
+					}
 
-				if(pv >= ((cc.defer !== undefined) ? cc.defer : 3)) {
-					_fa();
+					if(pv >= ((cc.defer !== undefined) ? cc.defer : 3)) {
+						_fa();
+					}
 				}
 			}
 		},

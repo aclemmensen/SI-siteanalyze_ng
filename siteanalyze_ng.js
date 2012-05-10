@@ -314,29 +314,23 @@
 			    _i.style.cssText = 'font-size:14px; font-family:Arial; padding:15px 0; width:940px; margin:auto;';
 					_i.id = "szcookieinner";
 			var _t = document.createElement('p');
-					_t.style.cssText = 'width: 740px; margin:0; padding:0; float:left; text-align:left;';
+					_t.style.cssText = 'width: 790px; margin:0; padding:0; float:left; text-align:left;';
 			    _t.innerHTML = copts.text;
 			var _b = document.createElement('div');
 			    _b.id = "szcookiebtn";
-					_b.style.cssText = 'float:right; width:200px; text-align:right;';
+					_b.style.cssText = 'float:right; width:130px; text-align:right; padding-top:15px;';
 			var _a = document.createElement('a');
 			    _a.id = "szcookieacpt";
-					_a.style.cssText = _bs + 'padding:5px 15px; margin-right:10px;';
+					_a.style.cssText = _bs + 'font-weight:normal; outline:none; color:black; padding:5px 25px 5px 0px; font-size:11px; background:url(\'//ssl.siteimprove.com/js/siteanalyze_ng/close_single.png\') no-repeat 100% 50%; text-align:right;';
 					_a.onclick = _fa;
 					_a.setAttribute('href', '#');
 					_a.innerHTML = copts.accept;
-			var _c = document.createElement('a');
-			    _c.id = "szcookieclose";
-					_c.style.cssText = _bs + 'font-weight:normal; outline:none; color:black; padding:5px 30px 5px 0px; font-size:11px; background:url(\'http://ac.givetwise.dk/siteanalyze_ng/close_sprite.png\') no-repeat 100% 0%; text-align:right;';
-					_c.onclick = _fc;
-					_c.setAttribute('href', '#');
-					_c.innerHTML = copts.close;
 			var _x = document.createElement('div');
 			    _x.style.cssText = 'clear:both; font-size:0; line-height:0; height:0;';
 
 			switch(_m) {
 				case 'optin':  _b.appendChild(_a); (cc.notrack) ? setnone() : settemp(); break;
-				case 'optout': _b.appendChild(_c); setperm(); _c.style.backgroundPosition = '100% -25px'; break;
+				case 'optout': _b.appendChild(_a); setperm(); break;
 			}
 
 			_i.appendChild(_t);

@@ -241,8 +241,9 @@
 		'cookieopt': function(args) {
 			var copts = args[1];
 			copts.cover = (copts.cover !== undefined) ? copts.cover : true;
+			copts.defer = (copts.defer !== undefined) ? copts.defer : 3;
 			var ctest = (copts.test !== undefined) ? copts.test : false;
-			var cc = copts.config || { 'mode': 'optin', 'notrack': true, 'defer': 3, 'force': false };
+			var cc = copts.config || { 'mode': 'optin', 'notrack': true, 'force': false };
 			var _m = cc.mode;
 			this.cookieuserchoice.active = true;
 
@@ -270,8 +271,8 @@
 			var istemp  = function() { return internal.cookieuserchoice.choice == 's'; }
 			var isnone  = function() { return internal.cookieuserchoice.choice == 'n'; }
 
-			var _fa = function() { setperm(); _fc(); } // accept
-			var _fr = function() { (cc.notrack) ? setnone() : settemp(); _fc(); } // refuse
+			var _fa = function() { setperm(); _fc(); return false; } // accept
+			var _fr = function() { (cc.notrack) ? setnone() : settemp(); _fc(); return false; } // refuse
 			var _fn = function() { setnone(); _fc(); } // no cookie
 			var _sc = function(e) { internal.setcookie('szcookiechoice', internal.cookieuserchoice.choice, e); }; // store choice
 
@@ -311,10 +312,10 @@
 						+ 'width:100%; background-color:white; border-bottom:2px black solid;';
 					_w.id = "szcookiewrp";
 			var _i = document.createElement('div');
-			    _i.style.cssText = 'font-size:14px; font-family:Arial; padding:15px 0; width:940px; margin:auto;';
+			    _i.style.cssText = 'font-size:13px; font-family:Arial; padding:15px 0; width:940px; margin:auto;';
 					_i.id = "szcookieinner";
 			var _t = document.createElement('p');
-					_t.style.cssText = 'width: 790px; margin:0; padding:0; float:left; text-align:left;';
+					_t.style.cssText = 'width: 790px; margin:0; padding:0; float:left; text-align:left; line-height:135%';
 			    _t.innerHTML = copts.text;
 			var _b = document.createElement('div');
 			    _b.id = "szcookiebtn";
@@ -351,7 +352,7 @@
 						? w.addEventListener('load', _fl, false)
 						: w.attachEvent('onload', _fl));
 
-				if(cc.defer && cc.defer > 0 && !cc.force) {
+				if(copts.defer > 0 && !cc.force) {
 					var pv = util.cookie('szcookiepv');
 					if(pv == null) {
 						internal.setcookie('szcookiepv', pv = 1);
@@ -361,7 +362,7 @@
 						pv = parseInt(pv);
 					}
 
-					if(pv >= ((cc.defer !== undefined) ? cc.defer : 3)) {
+					if(pv >= ((copts.defer !== undefined) ? copts.defer : 3)) {
 						_fa();
 					}
 				}

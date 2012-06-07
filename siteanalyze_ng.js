@@ -1,4 +1,6 @@
 (function(w) {
+	if(window['_sz'] !== undefined && _sz['internal'] !== undefined && _sz['opts'] !== undefined) return;
+
 	// Utility API
 	var util = {
 		'esc':   function(str) { return encodeURIComponent(new String(str).replace(/\n+|\r+|\s{2,}/g, '')); },

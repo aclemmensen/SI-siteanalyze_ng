@@ -173,6 +173,15 @@
 			opts[(a[2]) ? a[2] : a[1]] = util.global(a[1]);
 		},
 
+		'clicks': function(a) {
+			var links = util.tag('a');
+			for(var i=0; i<links.length; i++) {
+				var l = links[i];
+				if(l.href.charAt(l.href.length-1) == "#") { continue; }
+				util.listen(l, function() { api.logclick(this.href); });
+			}
+		},
+
 		'callbacks': {
 			'load':     null,
 			'request':  null,
@@ -245,17 +254,10 @@
 	}
 	opts.prev = c;
 
-	// Attach onclick handlers
-	var links = util.tag('a');
-	for(var i=0; i<links.length; i++) {
-		var l = links[i];
-		if(l.href.charAt(l.href.length-1) == "#") continue;
-		util.listen(l, function() { api.logclick(this.href); });
-	}
-
 	_sz = api;
 
 	api.push(['request']);
+	api.push(['clicks']);
 	internal.callback('load');
 
 })(window);

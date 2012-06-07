@@ -108,7 +108,7 @@
 
 			url = w.location.protocol + '//' + this.endpoint + "?" + out.join("&");
 
-			util.log(util.fmt("requesting -> {0}", url));
+			//util.log(util.fmt("requesting -> {0}", url));
 			img = new Image();
 			img.src = url;
 
@@ -263,17 +263,14 @@
 
 	var defer = function() {
 		if((document && document.readyState == "complete") || internal._ready) {
-			util.log('we are ready');
 			internal._ready = true;
 			for(var i=0; i<internal._readyhandler.length; i++) {
-				util.log('calling readyhandler ' + i);
 				internal._readyhandler[i].call();
 			}
 			return;
 		}
 
 		if(!internal._ready) {
-			util.log('not ready yet');
 			w.setTimeout(defer, 100);
 		}
 	};

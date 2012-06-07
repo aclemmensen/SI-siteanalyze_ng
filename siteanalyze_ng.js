@@ -3,8 +3,8 @@
 	var util = {
 		'esc':   function(str) { return encodeURIComponent(new String(str).replace(/\n+|\r+|\s{2,}/g, '')); },
 		'empty': function(e)   { return (e == undefined || e == null || e == ""); },
-		'tag':   function(str) { return document.getElementsByTagName(str); },
-		'id':    function(str) { return document.getElementById(str); },
+		'tag':   function(str) { return (document.getElementsByTagName) ? document.getElementsByTagName(str) : false; },
+		'id':    function(str) { return (document.getElementById) ? document.getElementById(str) : false; },
 		'clone': function(o)   { var n = {}; for(var i in o) { n[i] = o[i]; } return n; },
 		'rnd':   function()    { return Math.floor(Math.random() * 100000); },
 		'txt':   function(o)   { return (o.textContent) ? o.textContent : o.innerText; },
@@ -15,11 +15,7 @@
 			return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 		},
 		'navtime': function() {
-			if(w['performance']) {
-				return (new Date).getTime() - performance.timing.navigationStart;
-			} else {
-				return null;
-			}
+			return (w['performance']) ? (new Date).getTime() - performance.timing.navigationStart : null;
 		},
 		'fmt':   function() {
 			var s = arguments[0];
@@ -162,7 +158,6 @@
 		},
 
 		'feedback': function(args) {
-			//util.log('loading feedback');
 			opts.szfbid = util.uuid();
 			if(window['_szfb_config'] !== undefined && _szfb_config.length > 0 && _szfb_config[0]['feedbackid'] !== undefined) {
 				opts.feedbackid = _szfb_config[0].feedbackid;
@@ -222,13 +217,14 @@
 		},
 		
 		'opts': opts,
-		'userdata': _sz,
+		'userdata': null,
 		'util': util,
 		'internal': internal
 	};
 
 	// Handle user-defined variables
 	if(_sz != undefined) {
+		api.userdata = _sz;
 		for(var i=0; i<_sz.length; i++) {
 			api.push(_sz[i]);
 		}

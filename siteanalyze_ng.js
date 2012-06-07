@@ -257,25 +257,25 @@
 
 			var _w = document.createElement('div');
 			    _w.style.cssText = ((copts.cover)
-						? 'position:fixed; z-index:1000; top:0; left:0;'
-						: 'margin-bottom:15px;')
-						+ 'width:100%; background-color:white; border-bottom:2px black solid;';
-					_w.id = "szcookiewrp";
+			       ? 'position:fixed; z-index:1000; top:0; left:0;'
+			       : 'margin-bottom:15px;')
+			       + 'width:100%; background-color:white; border-bottom:2px black solid;';
+			    _w.id = "szcookiewrp";
 			var _i = document.createElement('div');
 			    _i.style.cssText = 'font-size:13px; font-family:Arial; padding:15px 0; width:940px; margin:auto;';
-					_i.id = "szcookieinner";
+			    _i.id = "szcookieinner";
 			var _t = document.createElement('p');
-					_t.style.cssText = 'width: 790px; margin:0; padding:0; float:left; text-align:left; line-height:135%';
+			    _t.style.cssText = 'width: 790px; margin:0; padding:0; float:left; text-align:left; line-height:135%';
 			    _t.innerHTML = copts.text;
 			var _b = document.createElement('div');
 			    _b.id = "szcookiebtn";
-					_b.style.cssText = 'float:right; width:130px; text-align:right; padding-top:15px;';
+			    _b.style.cssText = 'float:right; width:130px; text-align:right; padding-top:15px;';
 			var _a = document.createElement('a');
 			    _a.id = "szcookieacpt";
-					_a.style.cssText = _bs + 'font-weight:normal; outline:none; color:black; padding:5px 25px 5px 0px; font-size:11px; background:url(\'//ssl.siteimprove.com/js/siteanalyze_ng/close_single.png\') no-repeat 100% 50%; text-align:right;';
-					_a.onclick = _fa;
-					_a.setAttribute('href', '#');
-					_a.innerHTML = copts.accept;
+			    _a.style.cssText = _bs + 'font-weight:normal; outline:none; color:black; padding:5px 25px 5px 0px; font-size:11px; background:url(\'//ssl.siteimprove.com/js/siteanalyze_ng/close_single.png\') no-repeat 100% 50%; text-align:right;';
+			    _a.onclick = _fa;
+			    _a.setAttribute('href', '#');
+			    _a.innerHTML = copts.accept;
 			var _x = document.createElement('div');
 			    _x.style.cssText = 'clear:both; font-size:0; line-height:0; height:0;';
 

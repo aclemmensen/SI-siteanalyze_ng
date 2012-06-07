@@ -65,7 +65,7 @@
 (function(w) {
 	// Utility API
 	var util = {
-		'esc':   function(str) { return encodeURIComponent(new String(str).replace(/\n+|\r+|\s{2,}/g, null)); },
+		'esc':   function(str) { return encodeURIComponent(new String(str).replace(/\n+|\r+|\s{2,}/g, '')); },
 		'empty': function(e)   { return (e == undefined || e == null || e == ""); },
 		'tag':   function(str) { return document.getElementsByTagName(str); },
 		'id':    function(str) { return document.getElementById(str); },
@@ -160,6 +160,10 @@
 		'szfbid': null,       // uuid for feedback
 		'feedbackid': null    // id of feedback config
 	};
+
+	// Get old school searchWord and numberOfHits from SearchImprove/ES templates
+	if(window['searchWord'] !== undefined && window['searchWord'] != null)     opts.sw   = window['searchWord'];
+	if(window['numberOfHits'] !== undefined && window['numberOfHits'] != null) opts.hits = window['numberOfHits'];
 
 
 	// Internal API
@@ -292,6 +296,7 @@
 			api.push(_sz[i]);
 		}
 	}
+
 
 	// Read/set cookie to get session info
 	var c = util.cookie(internal.cookie);
